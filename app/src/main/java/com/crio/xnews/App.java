@@ -5,7 +5,10 @@ package com.crio.xnews;
 
 import java.io.IOException;
 import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
+import java.io.File;
 
 public class App {
     public String getGreeting() {
@@ -54,7 +57,11 @@ public class App {
 // If there is an error during file reading or JSON parsing, an IOException is thrown.
 
     public static List<UserPreference> readUserPreferences(String filePath) throws IOException {
-
-        return Collections.emptyList();
+        ObjectMapper mapper = new ObjectMapper();
+        
+        return mapper.readValue( 
+        new File(filePath),
+        new TypeReference<List<UserPreference>>(){}
+         );
     }
 }

@@ -7,14 +7,16 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class NewsParser {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    // private static final ObjectMapper objectMapper = new ObjectMapper();
 
 // TODO: CRIO_TASK_MODULE_PROJECT
 // Deserialize JSON String representing the response from the News API and 
 // then return the list of NewsArticle objects contained in the response.
 
     public static List<NewsArticle> parse(String json) throws IOException {
-
-        return Collections.emptyList();
+        ObjectMapper mapper = new ObjectMapper();
+       
+        NewsApiResponse respose =  mapper.readValue(json ,NewsApiResponse.class);
+        return   respose.getArticles();
     }
 }

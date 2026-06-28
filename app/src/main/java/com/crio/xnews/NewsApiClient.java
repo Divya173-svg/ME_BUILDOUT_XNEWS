@@ -4,10 +4,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Collections;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+
+
 public class NewsApiClient {
 
     private static final String API_URL = "https://newsapi.org/v2/everything";
-    private static final String API_KEY = "<_YOUR_API_KEY_>";
+    private static final String API_KEY = "8c03f3a919d94bc0b07c42e2fb702b3e";
 
 // TODO: CRIO_TASK_MODULE_PROJECT
 // Utilize the Okhttp3 library to send a request to the News API, including the provided query, language, and sortBy parameters.
@@ -18,7 +24,18 @@ public class NewsApiClient {
 
     public List<NewsArticle> fetchNewsArticles(String query, String language, String sortBy) throws IOException {
 
-        return Collections.emptyList();
+        String url = buildUrl(query, language, sortBy);
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+        .url(url)
+        .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            String json = response.body().string();
+            return NewsParser.parse(json);
+        }
+
     }
 
 // TODO: CRIO_TASK_MODULE_PROJECT
@@ -29,7 +46,22 @@ public class NewsApiClient {
 // The "language" and "sortBy" parameters are optional and will be included in the URL if they are non-empty.
 
     private String buildUrl(String query, String language, String sortBy) {
+    if(query==null || query.isEmpty()){
+        throw new IllegalArgumentException("Query parameter must not be empty");
+    }
 
-      return "";
+    String url = API_URL + "?q=" + query;
+      
+    if(language!=null && !language.isEmpty()){
+  url += "&language=" + language;
+    }
+
+      
+    if(sortBy!=null && !sortBy.isEmpty()){
+        url += "&sortBy=" + sortBy;
+          }
+
+          url += "&apiKey=" + API_KEY;
+          return url;
     }
 }
